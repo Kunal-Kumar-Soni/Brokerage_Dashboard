@@ -34,7 +34,6 @@ export default function Page1() {
   const [chartData, setChartData] = useState(null);
   const [hydrated, setHydrated] = useState(false);
 
-  // Load persisted state from localStorage on mount
   useEffect(() => {
     try {
       const savedDashboard = localStorage.getItem("page1:dashboardData");
@@ -53,7 +52,6 @@ export default function Page1() {
     }
   }, []);
 
-  // Persist dashboardData changes
   useEffect(() => {
     if (!hydrated || !dashboardData) return;
     try {
@@ -61,7 +59,6 @@ export default function Page1() {
     } catch (e) {}
   }, [dashboardData, hydrated]);
 
-  // Persist chartData changes
   useEffect(() => {
     if (!hydrated || !chartData) return;
     try {
@@ -161,7 +158,7 @@ export default function Page1() {
 
   return (
     <div className="bg-white">
-      <h1 className="mb-6 font-sans font-bold text-3xl text-center tracking-widest">
+      <h1 className="mb-6 font-sans font-bold text-2xl sm:text-3xl text-center tracking-widest">
         Brokerage Dashboard: <span className="text-red-700">Sterling Real Estate Group</span>
       </h1>
 
@@ -169,21 +166,21 @@ export default function Page1() {
       <div className="mb-4 border border-gray-300 rounded-lg divide-y divide-gray-300">
         <div className="flex flex-col justify-center items-center p-4">
           <h1 className="font-bold text-sm">💰 Closed Deal</h1>
-          <div>
-            <span className="font-bold text-3xl">$</span>
+          <div className="flex items-center gap-1">
+            <span className="font-bold text-2xl sm:text-3xl">$</span>
             <input
               type="number"
               value={dashboardData.closedDeal / 1000000}
               onChange={(e) => handleCurrencyChange("closedDeal", e.target.value)}
-              className="px-2 border border-gray-300 rounded w-22 font-bold text-3xl text-center"
+              className="px-2 border border-gray-300 rounded w-20 sm:w-22 font-bold text-2xl sm:text-3xl text-center"
               step="1"
             />
-            <span className="font-bold text-3xl">M</span>
+            <span className="font-bold text-2xl sm:text-3xl">M</span>
           </div>
           <p className="text-gray-500 text-xs">(100% allocated to Primary Agent)</p>
         </div>
 
-        <div className="grid grid-cols-4 divide-x divide-gray-300">
+        <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-gray-300">
           {[
             { label: "🏠 # Sell Side", field: "sellSide" },
             { label: "⚖ # Dual Side", field: "dualSide" },
@@ -196,7 +193,7 @@ export default function Page1() {
                 type="number"
                 value={dashboardData[item.field]}
                 onChange={(e) => handleInputChange(item.field, e.target.value)}
-                className="px-2 border border-gray-300 rounded w-20 font-bold text-2xl text-center"
+                className="px-2 border border-gray-300 rounded w-16 sm:w-20 font-bold text-xl sm:text-2xl text-center"
               />
             </div>
           ))}
@@ -205,7 +202,7 @@ export default function Page1() {
 
       {/* Second Box */}
       <div className="mb-4 border border-gray-300 rounded-lg divide-y divide-gray-300">
-        <div className="grid grid-cols-2 divide-x divide-gray-300">
+        <div className="grid grid-cols-1 md:grid-cols-2 divide-x divide-y md:divide-y-0 divide-gray-300">
           {[
             { label: "⏳ Pending", field: "pending" },
             { label: "📢 Active", field: "active" },
@@ -213,22 +210,22 @@ export default function Page1() {
             <div key={i} className="flex flex-col justify-center items-center p-3">
               <h1 className="text-gray-600 text-sm">{item.label}</h1>
               <div className="flex items-center gap-1">
-                <span className="font-bold text-3xl">$</span>
+                <span className="font-bold text-2xl sm:text-3xl">$</span>
                 <input
                   type="number"
                   value={dashboardData[item.field] / 1000000}
                   onChange={(e) => handleCurrencyChange(item.field, e.target.value)}
-                  className="px-2 border border-gray-300 rounded w-24 font-bold text-3xl text-center"
+                  className="px-2 border border-gray-300 rounded w-20 sm:w-24 font-bold text-2xl sm:text-3xl text-center"
                   step="1"
                 />
-                <span className="font-bold text-3xl">M</span>
+                <span className="font-bold text-2xl sm:text-3xl">M</span>
               </div>
               <p className="text-gray-500 text-xs">(Primary Agent)</p>
             </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-2 divide-x divide-gray-300">
+        <div className="grid grid-cols-1 md:grid-cols-2 divide-x divide-y md:divide-y-0 divide-gray-300">
           <div className="grid grid-cols-3 divide-x divide-gray-300">
             {[
               { label: "🏠 Sell Side", field: "pendingSellSide" },
@@ -241,7 +238,7 @@ export default function Page1() {
                   type="number"
                   value={dashboardData[item.field]}
                   onChange={(e) => handleInputChange(item.field, e.target.value)}
-                  className="px-2 border border-gray-300 rounded w-16 font-bold text-xl text-center"
+                  className="px-2 border border-gray-300 rounded w-14 sm:w-16 font-bold text-xl sm:text-xl text-center"
                 />
               </div>
             ))}
@@ -251,26 +248,26 @@ export default function Page1() {
               type="number"
               value={dashboardData.activeTotal}
               onChange={(e) => handleInputChange("activeTotal", e.target.value)}
-              className="px-2 border border-gray-300 rounded w-16 font-bold text-xl text-center"
+              className="px-2 border border-gray-300 rounded w-14 sm:w-16 font-bold text-xl sm:text-xl text-center"
             />
           </div>
         </div>
       </div>
 
       {/* Third Box */}
-      <div className="grid grid-cols-2 mb-4 border border-gray-300 rounded-lg divide-x divide-gray-300">
+      <div className="grid grid-cols-1 sm:grid-cols-2 mb-4 border border-gray-300 rounded-lg divide-x divide-y sm:divide-y-0 divide-gray-300">
         <div className="flex flex-col justify-center items-center p-3">
           <h1 className="text-gray-600 text-sm">💎 - 📉 Range</h1>
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-xl">$</span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-bold text-xl sm:text-xl">$</span>
             <input
               type="number"
               value={dashboardData.maxPrice / 1000000}
               onChange={(e) => handleCurrencyChange("maxPrice", e.target.value)}
-              className="px-1 border border-gray-300 rounded w-16 font-bold text-xl text-center"
+              className="px-1 border border-gray-300 rounded w-16 sm:w-16 font-bold text-xl sm:text-xl text-center"
               step="0.1"
             />
-            <span className="font-bold text-xl">M -</span>
+            <span className="font-bold text-xl sm:text-xl">M - $</span>
             <input
               type="number"
               value={dashboardData.minPrice / 1000}
@@ -280,17 +277,17 @@ export default function Page1() {
                   minPrice: parseFloat(e.target.value) * 1000 || 0,
                 }))
               }
-              className="px-1 border border-gray-300 rounded w-16 font-bold text-xl text-center"
+              className="px-1 border border-gray-300 rounded w-16 sm:w-16 font-bold text-xl sm:text-xl text-center"
               step="1"
             />
-            <span className="font-bold text-xl">K</span>
+            <span className="font-bold text-xl sm:text-xl">K</span>
           </div>
         </div>
 
         <div className="flex flex-col justify-center items-center p-3">
           <h1 className="text-gray-600 text-sm">📈 Avg. Sold Price</h1>
           <div className="flex items-center gap-1">
-            <span className="font-bold text-xl">$</span>
+            <span className="font-bold text-xl sm:text-xl">$</span>
             <input
               type="number"
               value={dashboardData.avgSoldPrice / 1000}
@@ -300,10 +297,10 @@ export default function Page1() {
                   avgSoldPrice: parseFloat(e.target.value) * 1000 || 0,
                 }))
               }
-              className="px-1 border border-gray-300 rounded w-20 font-bold text-2xl text-center"
+              className="px-1 border border-gray-300 rounded w-20 sm:w-20 font-bold text-2xl sm:text-2xl text-center"
               step="1"
             />
-            <span className="font-bold text-2xl">K</span>
+            <span className="font-bold text-2xl sm:text-2xl">K</span>
           </div>
         </div>
       </div>
@@ -312,7 +309,7 @@ export default function Page1() {
       <div className="p-4 border border-gray-300 rounded-lg">
         <div className="pb-4">
           <h1 className="mb-4 font-bold text-xl text-center">Total Closed Deals Analysis</h1>
-          <div className="grid grid-cols-2 mb-4">
+          <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
             {/* Chart 1 */}
             <div className="p-4">
               <h1 className="mb-4 font-semibold text-sm text-center">Volume($) by Deal Type</h1>

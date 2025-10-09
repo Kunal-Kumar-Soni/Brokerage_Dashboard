@@ -37,7 +37,6 @@ function Page2() {
       const saved = localStorage.getItem("page2:dashboardData");
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Deep-merge parsed into defaults and coerce numeric strings -> numbers
         const merged = { ...defaultDashboard };
         Object.keys(defaultDashboard).forEach((section) => {
           const defSection = defaultDashboard[section] || {};
@@ -45,7 +44,6 @@ function Page2() {
           merged[section] = { ...defSection };
           Object.keys(defSection).forEach((k) => {
             const v = parsedSection[k] ?? defSection[k];
-            // coerce numeric-like values to numbers
             merged[section][k] = typeof v === "string" && v !== "" ? Number(v) : v;
           });
         });
@@ -53,17 +51,14 @@ function Page2() {
         setHydrated(true);
         return;
       }
-      // no saved data -> use defaults
       setDashboardData(defaultDashboard);
       setHydrated(true);
-    } catch (e) {
-      // ignore
-    }
+    } catch (e) {}
   }, []);
 
   // Persist changes
   useEffect(() => {
-    if (!hydrated) return; // don't persist defaults before we've loaded saved data
+    if (!hydrated) return;
     try {
       localStorage.setItem("page2:dashboardData", JSON.stringify(dashboardData));
     } catch (e) {}
@@ -84,7 +79,7 @@ function Page2() {
 
   /* =====  Helper Render Function ===== */
   const renderInputs = (sectionName, sectionData, inputWidth = "w-24") => (
-    <div className="grid grid-cols-4 divide-x divide-gray-300">
+    <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-gray-300">
       {Object.entries(sectionData).map(([key, value]) => (
         <div key={key} className="flex flex-col justify-center items-center p-4">
           <h1 className="text-gray-600 text-sm capitalize">{key.replace(/([A-Z])/g, " $1")}</h1>
@@ -105,21 +100,23 @@ function Page2() {
       <h1 className="mb-8 font-sans font-bold text-3xl text-center tracking-widest">
         Brokerage Dashboard: <span className="text-red-700">Sterling Real Estate Group</span>
       </h1>
+
       {/* First Box */}
       <div className="mb-8 border border-gray-300 rounded-lg overflow-hidden">
-        <div className="flex justify-center items-center bg-gray-50 p-4 border-b">
+        <div className="flex justify-center items-center p-4 border-b border-b-gray-300">
           <h1 className="font-bold text-lg">Agents & Offices</h1>
         </div>
         {renderInputs("agentsAndOffices", dashboardData.agentsAndOffices)}
       </div>
+
       {/* Second Box */}
       <div className="mb-8 border border-gray-300 rounded-lg overflow-hidden">
-        <div className="grid grid-cols-2 bg-gray-50 divide-x divide-gray-300 text-center">
+        <div className="grid grid-cols-2 divide-x divide-gray-300 text-center">
           <h1 className="p-4 font-bold text-lg">Sold to List Price Ratio Change (%)</h1>
           <h1 className="p-4 font-bold text-lg">Avg. # of Days on Market (List to Close)</h1>
         </div>
 
-        <div className="grid grid-cols-6 border-gray-300 border-t divide-x divide-gray-300">
+        <div className="grid grid-cols-2 sm:grid-cols-6 border-gray-300 border-t divide-x divide-gray-300">
           {Object.entries(dashboardData.ratioAndMarketDays).map(([key, value]) => (
             <div key={key} className="flex flex-col justify-center items-center p-4 text-center">
               <h1 className="text-gray-600 text-sm capitalize">{key.replace(/([A-Z])/g, " $1")}</h1>
@@ -133,12 +130,13 @@ function Page2() {
           ))}
         </div>
       </div>
+
       {/* Third Box */}
       <div className="mb-8 border border-gray-300 rounded-lg overflow-hidden">
-        <div className="flex flex-col justify-center items-center bg-gray-50 p-4 border-b">
+        <div className="flex flex-col justify-center items-center p-4 border-b border-b-gray-300">
           <h1 className="font-bold text-lg">Estimated Total Org. Revenue</h1>
           <p className="text-gray-600 text-sm">(8% overhead + 20% Brokerage Share)</p>
-          <div>
+          <div className="flex justify-center items-center gap-2">
             <span className="font-bold text-2xl">$</span>
             <input
               type="number"
@@ -157,12 +155,13 @@ function Page2() {
           )
         )}
       </div>
+
       {/* Fourth Box */}
       <div className="border border-gray-300 rounded-lg overflow-hidden">
         <div className="p-4 text-center">
           <h1 className="font-bold">Market Rank (TTM*)</h1>
           <h1 className="font-bold">(Your Company&rsquo;s Rank: 1)</h1>
-          <div className="relative rounded-2xl w-full h-[200px] md:h-[300px] lg:h-[400px] overflow-hidden">
+          <div className="relative rounded-2xl w-full h-[200px] sm:h-[300px] lg:h-[400px] overflow-hidden">
             <Image
               src="/icon.png"
               alt="App Icon"

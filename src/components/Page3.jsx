@@ -21,7 +21,6 @@ export default function Page3() {
   const [data, setData] = useState(null);
   const [hydrated, setHydrated] = useState(false);
 
-  // Load persisted state from localStorage
   useEffect(() => {
     try {
       const saved = localStorage.getItem("page3:data");
@@ -36,13 +35,11 @@ export default function Page3() {
         setHydrated(true);
         return;
       }
-      // no saved data, use defaults
       setData(defaultData);
       setHydrated(true);
     } catch (e) {}
   }, []);
 
-  // Persist data on change
   useEffect(() => {
     if (!hydrated) return;
     try {
@@ -121,172 +118,117 @@ export default function Page3() {
 
   return (
     <div className="bg-white rounded-lg">
-      <h1 className="mb-8 font-sans font-bold text-3xl text-center tracking-widest">
+      <h1 className="mb-8 font-sans font-bold text-2xl sm:text-3xl md:text-4xl text-center tracking-widest">
         Market Analytics
       </h1>
 
       {/* First Box */}
       <div className="mb-8 border border-gray-300 rounded-lg overflow-hidden">
-        <div className="grid grid-cols-2 divide-x divide-gray-300 text-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 sm:divide-x divide-y sm:divide-y-0 divide-gray-300 text-center">
           <div className="flex flex-col p-4">
-            <h1 className="font-semibold text-lg">Average Listing Price</h1>
+            <h1 className="font-semibold text-base sm:text-lg">Average Listing Price</h1>
             <h1>Per Sqft.</h1>
             <div>
-              <span className="font-bold text-2xl">$</span>
+              <span className="font-bold text-xl sm:text-2xl">$</span>
               <input
                 type="number"
                 value={data.avgListingPrice}
                 onChange={(e) => handleChange("avgListingPrice", e.target.value)}
-                className="px-2 py-1 border border-gray-300 rounded w-25 font-bold text-2xl text-center"
+                className="px-2 py-1 border border-gray-300 rounded w-24 sm:w-32 font-bold text-xl sm:text-2xl text-center"
               />
             </div>
           </div>
           <div className="flex flex-col p-4">
-            <h1 className="font-semibold text-lg"># Active Agents</h1>
+            <h1 className="font-semibold text-base sm:text-lg"># Active Agents</h1>
             <h1>(Done At least 1 Deal)</h1>
             <div>
               <input
                 type="number"
                 value={data.activeAgents}
                 onChange={(e) => handleChange("activeAgents", e.target.value)}
-                className="px-2 py-1 border border-gray-300 rounded w-25 font-bold text-2xl text-center"
+                className="px-2 py-1 border border-gray-300 rounded w-24 sm:w-32 font-bold text-xl sm:text-2xl text-center"
               />
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-6 border-gray-300 border-t divide-x divide-gray-300">
-          <div className="flex flex-col justify-center items-center p-4 text-center">
-            <h1 className="text-gray-600 text-sm">📌 # Closed</h1>
-            <input
-              type="number"
-              value={data.closed}
-              onChange={(e) => handleChange("closed", e.target.value)}
-              className="mt-2 px-2 py-1 border border-gray-300 rounded w-25 font-bold text-2xl text-center"
-            />
-          </div>
-          <div className="flex flex-col justify-center items-center p-4 text-center">
-            <h1 className="text-gray-600 text-sm">⏳ # Pending</h1>
-            <input
-              type="number"
-              value={data.pending}
-              onChange={(e) => handleChange("pending", e.target.value)}
-              className="mt-2 px-2 py-1 border border-gray-300 rounded w-25 font-bold text-2xl text-center"
-            />
-          </div>
-          <div className="flex flex-col justify-center items-center p-4 text-center">
-            <h1 className="text-gray-600 text-sm">📢 # Active</h1>
-            <input
-              type="number"
-              value={data.active}
-              onChange={(e) => handleChange("active", e.target.value)}
-              className="mt-2 px-2 py-1 border border-gray-300 rounded w-25 font-bold text-2xl text-center"
-            />
-          </div>
-          <div className="flex flex-col justify-center items-center p-4 text-center">
-            <h1 className="text-gray-600 text-sm">Property Price Market Median</h1>
-            <div>
-              <span className="font-bold text-2xl">$</span>
-              <input
-                type="number"
-                value={data.priceMedian}
-                onChange={(e) => handleChange("priceMedian", e.target.value)}
-                className="mt-2 px-2 py-1 border border-gray-300 rounded w-25 font-bold text-2xl text-center"
-              />
-              <span className="font-bold text-2xl">K</span>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 border-gray-300 border-t">
+          {[
+            { label: "📌 # Closed", key: "closed" },
+            { label: "⏳ # Pending", key: "pending" },
+            { label: "📢 # Active", key: "active" },
+            { label: "Property Price Market Median", key: "priceMedian", prefix: "$", suffix: "K" },
+            { label: "Avg. Days From Pending To Closed", key: "avgDaysPendingToClosed" },
+            { label: "Gross Income (Commission)", key: "grossIncome" },
+          ].map((item, index) => (
+            <div
+              key={index}
+              className="flex flex-col justify-center items-center p-4 border-gray-300 sm:border-r sm:last:border-r-0 border-b sm:border-b-0 last:border-b-0 text-sm sm:text-base text-center"
+            >
+              <h1 className="text-gray-600">{item.label}</h1>
+              <div className="flex justify-center items-center mt-2">
+                {item.prefix && (
+                  <span className="font-bold text-lg sm:text-2xl">{item.prefix}</span>
+                )}
+                <input
+                  type="number"
+                  value={data[item.key]}
+                  onChange={(e) => handleChange(item.key, e.target.value)}
+                  className="px-2 py-1 border border-gray-300 rounded w-20 sm:w-24 font-bold text-lg sm:text-2xl text-center"
+                />
+                {item.suffix && (
+                  <span className="font-bold text-lg sm:text-2xl">{item.suffix}</span>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col justify-center items-center p-4 text-center">
-            <h1 className="text-gray-600 text-sm">Avg. Days From Pending To Closed</h1>
-            <input
-              type="number"
-              value={data.avgDaysPendingToClosed}
-              onChange={(e) => handleChange("avgDaysPendingToClosed", e.target.value)}
-              className="mt-2 px-2 py-1 border border-gray-300 rounded w-25 font-bold text-2xl text-center"
-            />
-          </div>
-          <div className="flex flex-col justify-center items-center p-4 text-center">
-            <h1 className="text-gray-600 text-sm">Gross Income (Commission)</h1>
-            <input
-              type="number"
-              value={data.grossIncome}
-              onChange={(e) => handleChange("grossIncome", e.target.value)}
-              className="mt-2 px-2 py-1 border border-gray-300 rounded w-25 font-bold text-2xl text-center"
-            />
-          </div>
+          ))}
         </div>
       </div>
 
       {/* Second Box */}
       <div className="mb-8 border border-gray-300 rounded-lg overflow-hidden">
-        <div className="grid grid-cols-5 divide-x divide-gray-300">
-          <div className="flex flex-col justify-center items-center p-4 text-center">
-            <h1 className="text-gray-600 text-sm">Multiple-Agent Deal</h1>
-            <h1 className="text-gray-600 text-sm">(Seller)</h1>
-            <input
-              type="number"
-              value={data.multiAgentSeller}
-              onChange={(e) => handleChange("multiAgentSeller", e.target.value)}
-              className="mt-2 px-2 py-1 border border-gray-300 rounded w-25 font-bold text-2xl text-center"
-            />
-          </div>
-          <div className="flex flex-col justify-center items-center p-4 text-center">
-            <h1 className="text-gray-600 text-sm">Multiple-Agent Deal</h1>
-            <h1 className="text-gray-600 text-sm">(Buyer)</h1>
-            <input
-              type="number"
-              value={data.multiAgentBuyer}
-              onChange={(e) => handleChange("multiAgentBuyer", e.target.value)}
-              className="mt-2 px-2 py-1 border border-gray-300 rounded w-25 font-bold text-2xl text-center"
-            />
-          </div>
-          <div className="flex flex-col justify-center items-center p-4 text-center">
-            <h1 className="text-gray-600 text-sm">Duel</h1>
-            <h1 className="text-gray-600 text-sm">(Buyer, Seller)</h1>
-            <input
-              type="number"
-              value={data.dualBuyerSeller}
-              onChange={(e) => handleChange("dualBuyerSeller", e.target.value)}
-              className="mt-2 px-2 py-1 border border-gray-300 rounded w-25 font-bold text-2xl text-center"
-            />
-          </div>
-          <div className="flex flex-col justify-center items-center p-4 text-center">
-            <h1 className="text-gray-600 text-sm">Single-Agent Deal</h1>
-            <h1 className="text-gray-600 text-sm">(Seller)</h1>
-            <input
-              type="number"
-              value={data.singleAgentSeller}
-              onChange={(e) => handleChange("singleAgentSeller", e.target.value)}
-              className="mt-2 px-2 py-1 border border-gray-300 rounded w-25 font-bold text-2xl text-center"
-            />
-          </div>
-          <div className="flex flex-col justify-center items-center p-4 text-center">
-            <h1 className="text-gray-600 text-sm">Single-Agent Deal</h1>
-            <h1 className="text-gray-600 text-sm">(Buyer)</h1>
-            <input
-              type="number"
-              value={data.singleAgentBuyer}
-              onChange={(e) => handleChange("singleAgentBuyer", e.target.value)}
-              className="mt-2 px-2 py-1 border border-gray-300 rounded w-25 font-bold text-2xl text-center"
-            />
-          </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 sm:divide-x divide-y sm:divide-y-0 divide-gray-300">
+          {[
+            { label1: "Multiple-Agent Deal", label2: "(Seller)", key: "multiAgentSeller" },
+            { label1: "Multiple-Agent Deal", label2: "(Buyer)", key: "multiAgentBuyer" },
+            { label1: "Duel", label2: "(Buyer, Seller)", key: "dualBuyerSeller" },
+            { label1: "Single-Agent Deal", label2: "(Seller)", key: "singleAgentSeller" },
+            { label1: "Single-Agent Deal", label2: "(Buyer)", key: "singleAgentBuyer" },
+          ].map((item, i) => (
+            <div
+              key={i}
+              className="flex flex-col justify-center items-center p-4 text-sm sm:text-base text-center"
+            >
+              <h1 className="text-gray-600">{item.label1}</h1>
+              <h1 className="text-gray-600">{item.label2}</h1>
+              <input
+                type="number"
+                value={data[item.key]}
+                onChange={(e) => handleChange(item.key, e.target.value)}
+                className="mt-2 px-2 py-1 border border-gray-300 rounded w-20 sm:w-24 font-bold text-lg sm:text-2xl text-center"
+              />
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Third Box */}
       <div className="border border-gray-300 rounded-lg overflow-hidden">
         <div className="p-4 text-center">
-          <h1 className="font-bold text-2xl">Distribution of Property Listing Status</h1>
+          <h1 className="font-bold text-xl sm:text-2xl">Distribution of Property Listing Status</h1>
         </div>
 
-        <div className="p-8">
-          <DonutChart data={chartData} size={280} />
-          <div className="flex flex-col gap-3 mx-auto mt-8 max-w-md">
+        <div className="flex flex-col items-center p-4 sm:p-8">
+          <DonutChart data={chartData} size={240} />
+          <div className="flex flex-col gap-3 mt-6 w-full max-w-md">
             {chartData.map((item, index) => (
-              <div key={index} className="flex justify-between items-center text-sm">
+              <div
+                key={index}
+                className="flex justify-between items-center text-xs sm:text-sm md:text-base"
+              >
                 <div className="flex items-center gap-2">
                   <div
-                    className="rounded-full w-4 h-4"
+                    className="rounded-full w-3 sm:w-4 h-3 sm:h-4"
                     style={{ backgroundColor: item.color }}
                   ></div>
                   <span>{item.label}</span>
