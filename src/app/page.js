@@ -29,7 +29,7 @@ function Home() {
   };
 
   const handleNextBtn = () => {
-    setCurrentPage((prev) => (prev && prev < pages.length ? prev + 1 : prev));
+    setCurrentPage((next) => (next && next < pages.length ? next + 1 : next));
   };
 
   if (!hydrated) return null;
